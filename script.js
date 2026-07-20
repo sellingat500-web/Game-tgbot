@@ -1,125 +1,92 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+const tg = window.Telegram.WebApp;
+tg.expand(); // Full screen
+
+// User Data & Default Balance setup
+const user = tg.initDataUnsafe?.user;
+let userBalance = parseInt(localStorage.getItem('balance')) || 100; // Naye user ko 100 coins default
+
+// Profile Setup Function
+function loadProfile() {
+    if (user) {
+        document.getElementById('user-name').innerText = user.first_name;
+        // Telegram kabhi-kabhi photo_url block karta hai, isliye fallback lagaya hai
+        if (user.photo_url) {
+            document.getElementById('user-photo').src = user.photo_url;
+        }
+    } else {
+        document.getElementById('user-name').innerText = "Guest Player";
+    }
+    updateBalanceDisplay();
 }
 
-body {
-    background-color: #0f172a; /* Deep modern dark blue */
-    color: white;
-    padding-bottom: 20px;
+function updateBalanceDisplay() {
+    document.getElementById('user-balance').innerText = userBalance;
+    localStorage.setItem('balance', userBalance);
 }
 
-/* Header & Profile */
-.top-bar {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    padding: 20px;
-    border-bottom: 1px solid #334155;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+// ---------------- DAILY BONUS LOGIC ----------------
+function claimDailyBonus() {
+    tg.HapticFeedback.impactOccurred('medium');
+    
+    // Raat 12 baje ke liye Date ko local string me badalte hain
+    const today = new Date().toLocaleDateString(); 
+    const lastClaim = localStorage.getItem('lastDailyBonus');
+
+    if (lastClaim === today) {
+        tg.showAlert("Aapne aaj ka bonus already le liya hai. Raat 12 baje ke baad try karein!");
+    } else {
+        userBalance += 50; // Daily 50 coins
+        localStorage.setItem('lastDailyBonus', today);
+        updateBalanceDisplay();
+        tg.showAlert("🎉 Badhai ho! Aapko 50 Daily Bonus Coins mile.");
+    }
 }
 
-.profile-section {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+// ---------------- REFERRAL LOGIC (Frontend Mock) ----------------
+function openReferral() {
+    tg.HapticFeedback.impactOccurred('light');
+    let userId = user ? user.id : '000';
+    let referLink = `https://t.me/YourBotUsername?start=ref_${userId}`;
+    
+    tg.showPopup({
+        title: 'Invite Friends 👥',
+        message: `Per Refer: 50 Coins\nCommission: 1% of friend's gameplay.\n\nAapka Link:\n${referLink}`,
+        buttons: [
+            { id: 'copy', type: 'default', text: 'Copy Link' },
+            { type: 'cancel', text: 'Close' }
+        ]
+    }, function(buttonId) {
+        if (buttonId === 'copy') {
+            // Note: Clipboard write browser me chalega, Tg WebApp me SDK required hai
+            tg.showAlert("Link copy karna aur commission ka exact data backend lagne par kaam karega!");
+        }
+    });
 }
 
-#user-photo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid #38bdf8; /* Neon blue border */
-    object-fit: cover;
+// ---------------- GAME WIN/LOSS LOGIC (50% Win Rate) ----------------
+function playGame(gameName, betAmount) {
+    tg.HapticFeedback.impactOccurred('medium');
+
+    if (userBalance < betAmount) {
+        tg.showAlert(`❌ Balance low hai! Kam se kam ${betAmount} coins chahiye.`);
+        return;
+    }
+
+    // Abhi game interface khulne ke bajaye direct result dikha rahe hain
+    // 50% Win Rate Logic
+    let isWin = Math.random() > 0.5; // 0.5 se upar aaya to Win, niche to Loss
+
+    if (isWin) {
+        let winAmount = betAmount * 2; // 10 lagaya, 20 mila
+        userBalance = userBalance + (winAmount - betAmount);
+        tg.showAlert(`🎉 WIN! Aapne ${gameName} mein ${winAmount} coins jeete.`);
+    } else {
+        userBalance = userBalance - betAmount; // 10 lagaya, haar gaye
+        tg.showAlert(`😢 LOSS! Aapne ${gameName} mein ${betAmount} coins haar diye. Try again!`);
+    }
+    
+    updateBalanceDisplay();
 }
 
-.user-info h3 {
-    font-size: 18px;
-    margin-bottom: 5px;
-}
-
-.balance {
-    font-size: 16px;
-    color: #fbbf24; /* Gold color */
-    font-weight: bold;
-}
-
-/* Rewards Section */
-.rewards-box {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 20px;
-    gap: 10px;
-}
-
-.btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    color: white;
-    transition: 0.2s;
-}
-
-.btn:active { transform: scale(0.95); }
-
-.reward-btn {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
-}
-
-.refer-btn {
-    background: linear-gradient(135deg, #10b981, #059669);
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-}
-
-/* Games Section */
-.games-container {
-    padding: 20px;
-}
-
-.games-container h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #e2e8f0;
-}
-
-.games-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
-    gap: 15px;
-}
-
-.game-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.2s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.game-card:active {
-    transform: scale(0.95);
-    background: #334155;
-}
-
-.game-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-.game-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #cbd5e1;
-}
+// App start hone par profile load karo
+loadProfile();
