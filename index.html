@@ -10,18 +10,18 @@
 </head>
 <body>
 
-    <!-- Header with Official TON Coin Image -->
+    <!-- Header -->
     <header class="new-top-bar">
         <div class="logo-text">RARISM</div>
         <div class="user-controls">
-            <div class="balance-pill" onclick="switchPage('profile')">
+            <div class="balance-pill" onclick="switchPage('wallet')">
                 <span id="user-balance">0.000</span>
                 <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" class="ton-icon" alt="TON">
             </div>
         </div>
     </header>
 
-    <!-- Live Winners Ticker Bar (AI Feature) -->
+    <!-- Live Ticker -->
     <div class="live-ticker">
         <div class="ticker-content" id="ticker-text">
             🔥 <span>@alex_01</span> won <b>0.1 TON</b> on Aviator &nbsp;|&nbsp; 
@@ -39,7 +39,6 @@
             </div>
             
             <div class="games-grid">
-                
                 <div class="game-card" onclick="alert('Aviator coming soon!')">
                     <div class="game-badge">HOT</div>
                     <img src="https://cdn-icons-png.flaticon.com/512/1356/1356479.png" class="game-img" alt="Aviator">
@@ -71,41 +70,31 @@
                     <div class="game-title">Mines 3x3</div>
                     <span class="play-tag">PLAY NOW</span>
                 </div>
-
             </div>
         </section>
     </div>
 
-    <!-- PAGE 2: PROFILE -->
+    <!-- PAGE 2: PROFILE (Cleaned - No Deposit/Withdrawal Buttons) -->
     <div id="page-profile" class="page" style="display: none;">
         <div class="profile-card">
             <img id="profile-dp" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Profile">
             <h2 id="profile-name">Guest Player</h2>
             <p class="user-id">ID: <span id="profile-id">000000</span></p>
         </div>
-        
-        <div class="wallet-card">
-            <p class="balance-label">Total Balance</p>
-            <h1 class="balance-val"><span id="profile-balance">0.000</span> <small>TON</small></h1>
-            <div class="wallet-buttons">
-                <button class="btn deposit-btn" onclick="alert('Deposit Window')"><i class="fas fa-arrow-down"></i> Deposit</button>
-                <button class="btn withdraw-btn" onclick="alert('Withdraw Window')"><i class="fas fa-arrow-up"></i> Withdraw</button>
-            </div>
-        </div>
 
         <div class="referral-box">
             <div class="ref-icon"><i class="fas fa-gift"></i></div>
             <h3>Refer & Earn Spins</h3>
-            <p>Get <b>1 FREE Spin</b> + <b>1% Commission</b> for every referred friend!</p>
+            <p>Get <b>1 Bonus Spin</b> for every referred friend!</p>
             <button class="btn refer-btn" onclick="copyRefLink()"><i class="fas fa-copy"></i> Copy Referral Link</button>
         </div>
     </div>
 
-    <!-- PAGE 3: WHEEL (RESTRUCTURED NO-SKEW DESIGN) -->
+    <!-- PAGE 3: WHEEL (24H Timer Protected) -->
     <div id="page-wheel" class="page" style="display: none;">
         <div class="wheel-header">
             <h2>💎 TON Lucky Wheel</h2>
-            <div class="spin-counter-badge">Spins Remaining: <strong id="spin-count">1</strong></div>
+            <div class="spin-counter-badge" id="spin-status-badge">Daily Spin: Available</div>
         </div>
         
         <div class="wheel-container">
@@ -113,23 +102,56 @@
             <div class="wheel-center-cap">
                 <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" alt="TON">
             </div>
-            <div class="wheel-board" id="wheel-board">
-                <!-- Clean JS Rendered Slices -->
-            </div>
+            <div class="wheel-board" id="wheel-board"></div>
         </div>
 
         <button class="btn spin-btn" id="spin-button" onclick="spinWheel()">SPIN NOW</button>
     </div>
 
-    <!-- PAGE 4: HISTORY -->
-    <div id="page-history" class="page" style="display: none;">
-        <h2>Transaction History</h2>
-        <div class="history-list" id="history-container">
-            <!-- History Records -->
+    <!-- PAGE 4: WALLET (Deposit & Withdrawal Section) -->
+    <div id="page-wallet" class="page" style="display: none;">
+        <div class="wallet-card">
+            <p class="balance-label">Total Balance</p>
+            <h1 class="balance-val"><span id="wallet-balance">0.000</span> <small>TON</small></h1>
+        </div>
+
+        <div class="wallet-tabs">
+            <button class="tab-btn active" id="tab-dep-btn" onclick="switchWalletTab('deposit')">⬇ Deposit</button>
+            <button class="tab-btn" id="tab-with-btn" onclick="switchWalletTab('withdraw')">⬆ Withdraw</button>
+        </div>
+
+        <!-- Deposit Box -->
+        <div id="deposit-box" class="wallet-box">
+            <h3>Deposit Funds via UPI</h3>
+            <input type="number" id="dep-amount" placeholder="Enter Amount (e.g. 100 ₹)">
+            <button class="btn deposit-btn" onclick="generateDepositQR()">Generate UPI QR</button>
+            
+            <div id="qr-section" style="display: none; margin-top: 15px;">
+                <p>Scan & Pay <strong id="qr-amount-text">₹0</strong></p>
+                <img id="upi-qr-img" src="" alt="UPI QR" style="width: 180px; height: 180px; margin: 10px 0; border-radius: 10px;">
+                <button class="btn claim-btn" onclick="confirmDepositSent()">Done (I Have Paid)</button>
+            </div>
+        </div>
+
+        <!-- Withdraw Box -->
+        <div id="withdraw-box" class="wallet-box" style="display: none;">
+            <h3>Withdraw Funds to UPI</h3>
+            <p class="info-text">Note: Minimum <b>0.5 TON</b> balance must be maintained.</p>
+            <p class="max-text">Max Withdrawable: <strong id="max-withdraw-val">0.000 TON</strong></p>
+            
+            <input type="text" id="with-upi" placeholder="Enter UPI ID (e.g. name@upi)">
+            <input type="number" id="with-amount" placeholder="Amount (TON)" step="0.001">
+            <button class="btn withdraw-btn" onclick="processWithdrawal()">Proceed Withdrawal</button>
         </div>
     </div>
 
-    <!-- WIN WINNER MODAL CELEBRATION (AI Feature) -->
+    <!-- PAGE 5: HISTORY -->
+    <div id="page-history" class="page" style="display: none;">
+        <h2>Transaction History</h2>
+        <div class="history-list" id="history-container"></div>
+    </div>
+
+    <!-- WIN MODAL -->
     <div id="win-modal" class="modal-overlay" style="display: none;">
         <div class="win-card">
             <div class="sparkles">✨</div>
@@ -141,16 +163,19 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- DOWNSIDE NAVIGATION BAR (5 Tabs) -->
     <nav class="bottom-nav">
         <div class="nav-item" onclick="switchPage('profile')" id="nav-profile">
             <i class="fas fa-user"></i><span>Profile</span>
         </div>
+        <div class="nav-item" onclick="switchPage('wheel')" id="nav-wheel">
+            <i class="fas fa-dharmachakra"></i><span>Wheel</span>
+        </div>
         <div class="nav-item nav-center active" onclick="switchPage('games')" id="nav-games">
             <div class="center-btn"><i class="fas fa-gamepad"></i><span>Games</span></div>
         </div>
-        <div class="nav-item" onclick="switchPage('wheel')" id="nav-wheel">
-            <i class="fas fa-dharmachakra"></i><span>Wheel</span>
+        <div class="nav-item" onclick="switchPage('wallet')" id="nav-wallet">
+            <i class="fas fa-wallet"></i><span>Wallet</span>
         </div>
         <div class="nav-item" onclick="switchPage('history')" id="nav-history">
             <i class="fas fa-history"></i><span>History</span>
