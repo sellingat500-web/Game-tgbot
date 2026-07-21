@@ -4,21 +4,72 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 let balance = parseFloat(localStorage.getItem('balance')) || 0.000;
 let history = JSON.parse(localStorage.getItem('history')) || [];
+let soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
 
-// Bot & Admin Config
+// Bot Config
 const ADMIN_ID = "8300015294";
 const BOT_TOKEN = "8896244741:AAFLkaS7py9wY7ToUMbcd3TpwWSETkoPlEE";
 const UPI_ID = "8075940486@omni";
 
-// Spin Time Tracker
 let lastSpinTime = parseInt(localStorage.getItem('lastSpinTime')) || 0;
 let bonusSpins = parseInt(localStorage.getItem('bonusSpins')) || 0;
 
+// ---- 🔊 WEB AUDIO API SYNTHESIZER (NO EXTERNAL FILES) ----
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+
+function playSound(type) {
+    if (!soundEnabled) return;
+    if (!audioCtx) audioCtx = new AudioCtx();
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if (type === 'tick') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+    } else if (type === 'win') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+    }
+}
+
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem('soundEnabled', soundEnabled);
+    document.getElementById('sound-btn').innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
+    showToast(soundEnabled ? "Audio Enabled" : "Audio Muted", "info");
+}
+
+// ---- 🍞 CUSTOM TOAST SYSTEM ----
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+    
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// UI State Updater
 function updateUI() {
     document.getElementById('user-balance').innerText = balance.toFixed(3);
     document.getElementById('wallet-balance').innerText = balance.toFixed(3);
     
-    // Max withdraw calculation (Maintain min 0.5 TON)
     let maxWithdraw = Math.max(0, balance - 0.5);
     document.getElementById('max-withdraw-val').innerText = `${maxWithdraw.toFixed(3)} TON`;
 
@@ -31,65 +82,55 @@ function updateUI() {
     checkSpinCooldown();
 }
 
-// 24 Hours Cooldown Logic for Wheel
 function checkSpinCooldown() {
     const now = Date.now();
-    const cooldown = 24 * 60 * 60 * 1000; // 24 hours in ms
+    const cooldown = 24 * 60 * 60 * 1000;
     const badge = document.getElementById('spin-status-badge');
     const spinBtn = document.getElementById('spin-button');
 
     if (now - lastSpinTime >= cooldown) {
-        badge.innerText = "Daily Spin: Available!";
+        badge.innerText = "Daily Spin: Ready!";
         badge.style.color = "#10b981";
-        badge.style.borderColor = "#10b981";
-        spinBtn.innerText = "SPIN NOW";
         spinBtn.disabled = false;
     } else if (bonusSpins > 0) {
-        badge.innerText = `Bonus Spins Left: ${bonusSpins}`;
-        badge.style.color = "#0088cc";
-        badge.style.borderColor = "#0088cc";
-        spinBtn.innerText = "SPIN (BONUS)";
+        badge.innerText = `Bonus Spins: ${bonusSpins}`;
+        badge.style.color = "#00f2fe";
         spinBtn.disabled = false;
     } else {
         const diff = cooldown - (now - lastSpinTime);
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        
-        badge.innerText = `Next Spin in: ${hours}h ${minutes}m`;
+        badge.innerText = `Cooldown: ${hours}h ${minutes}m`;
         badge.style.color = "#ef4444";
-        badge.style.borderColor = "#ef4444";
-        spinBtn.innerText = "COOLDOWN ACTIVE";
+        spinBtn.innerText = "LOCKED";
     }
 }
 
 // Page Navigation
 function switchPage(pageId) {
     tg.HapticFeedback.impactOccurred('light');
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    document.getElementById(`page-${pageId}`).style.display = 'block';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${pageId}`).classList.add('active');
 
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
     document.getElementById(`nav-${pageId}`).classList.add('active');
 
     if(pageId === 'history') renderHistory();
     if(pageId === 'wheel') checkSpinCooldown();
 }
 
-// Wallet Sub-tabs (Deposit / Withdraw)
 function switchWalletTab(type) {
-    tg.HapticFeedback.impactOccurred('light');
     document.getElementById('deposit-box').style.display = type === 'deposit' ? 'block' : 'none';
     document.getElementById('withdraw-box').style.display = type === 'withdraw' ? 'block' : 'none';
-    
     document.getElementById('tab-dep-btn').classList.toggle('active', type === 'deposit');
     document.getElementById('tab-with-btn').classList.toggle('active', type === 'withdraw');
 }
 
-// DEPOSIT PROCESS
+// Deposit & Withdrawal Handlers
 function generateDepositQR() {
     const amt = document.getElementById('dep-amount').value;
     if(!amt || amt < 50) {
-        tg.showAlert("Minimum deposit amount is ₹50");
+        showToast("Minimum deposit is ₹50", "error");
         return;
     }
     const upiString = `upi://pay?pa=${UPI_ID}&pn=Rarism&am=${amt}&cu=INR`;
@@ -101,84 +142,58 @@ function generateDepositQR() {
 function confirmDepositSent() {
     const amt = document.getElementById('dep-amount').value;
     const userName = user ? user.first_name : "Guest";
-    const userId = user ? user.id : "0000";
+    const msg = `📥 *DEPOSIT REQUEST*\nUser: ${userName}\nAmount: ₹${amt}`;
 
-    const msg = `📥 *NEW DEPOSIT REQUEST*\n\n👤 *User:* ${userName}\n🆔 *User ID:* ${userId}\n💰 *Amount:* ₹${amt}\n\nPlease check bank statement & credit balance.`;
-    
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
         .then(() => {
-            tg.showAlert("✅ Deposit Request Sent to Admin!");
+            showToast("Deposit Request Sent to Admin!", "success");
             document.getElementById('qr-section').style.display = 'none';
-            document.getElementById('dep-amount').value = '';
         });
 }
 
-// WITHDRAWAL PROCESS (With 0.5 TON Min Balance Protection)
 function processWithdrawal() {
     const upi = document.getElementById('with-upi').value.trim();
     const amt = parseFloat(document.getElementById('with-amount').value);
     const maxWithdraw = balance - 0.5;
 
-    if(!upi || !upi.includes('@')) {
-        tg.showAlert("Please enter a valid UPI ID (e.g. name@upi)");
-        return;
-    }
-    if(!amt || amt <= 0) {
-        tg.showAlert("Please enter a valid withdrawal amount");
-        return;
-    }
-    if(amt > maxWithdraw) {
-        tg.showAlert(`Insufficient Withdrawable Balance!\n\nYou must maintain a minimum 0.5 TON balance.\nMaximum allowed withdrawal: ${Math.max(0, maxWithdraw).toFixed(3)} TON`);
-        return;
-    }
+    if(!upi.includes('@')) return showToast("Enter valid UPI ID", "error");
+    if(amt > maxWithdraw) return showToast(`Max withdrawable is ${Math.max(0, maxWithdraw).toFixed(3)} TON`, "error");
 
-    // Deduct Balance Immediately
     balance -= amt;
     localStorage.setItem('balance', balance);
     addHistory("Withdrawal", `To ${upi}`, amt, 'loss');
     updateUI();
 
-    // Telegram Bot Notification to Admin
-    const userName = user ? user.first_name : "Guest";
-    const userId = user ? user.id : "0000";
-
-    const msg = `💸 *NEW WITHDRAWAL REQUEST*\n\n👤 *User:* ${userName}\n🆔 *User ID:* ${userId}\n🏦 *UPI ID:* \`${upi}\`\n💰 *Amount:* ${amt} TON\n\nPlease transfer funds to user UPI.`;
-
+    const msg = `💸 *WITHDRAWAL REQUEST*\nUser: ${user?.first_name}\nUPI: \`${upi}\`\nAmt: ${amt} TON`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
         .then(() => {
-            tg.showAlert(`✅ Withdrawal Request Submitted!\n\n${amt} TON deducted. Admin will credit funds to ${upi} shortly.`);
-            document.getElementById('with-upi').value = '';
-            document.getElementById('with-amount').value = '';
+            showToast("Payout Request Submitted!", "success");
         });
 }
 
-// WHEEL LOGIC (24H Protected)
+// WHEEL LOGIC WITH AUDIO & CONFETTI
 const slices = [
-    { label: "0.001 TON", val: 0.001, prob: 70, color: "#1e2942" },
-    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#0088cc" },
-    { label: "0.1 TON",   val: 0.1,   prob: 1,  color: "#1e2942" },
-    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#0088cc" },
-    { label: "0.5 TON",   val: 0.5,   prob: 0.5,color: "#1e2942" },
-    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#0088cc" },
+    { label: "0.001 TON", val: 0.001, prob: 70, color: "#12192a" },
+    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#00f2fe" },
+    { label: "0.1 TON",   val: 0.1,   prob: 1,  color: "#12192a" },
+    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#00f2fe" },
+    { label: "0.5 TON",   val: 0.5,   prob: 0.5,color: "#12192a" },
+    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#00f2fe" },
     { label: "1.0 TON",   val: 1.0,   prob: 0.2,color: "#f59e0b" },
-    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#0088cc" },
-    { label: "0.1 TON",   val: 0.1,   prob: 1,  color: "#1e2942" },
-    { label: "0.5 TON",   val: 0.5,   prob: 0.5,color: "#0088cc" },
-    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#1e2942" },
-    { label: "0.1 TON",   val: 0.1,   prob: 1,  color: "#0088cc" },
+    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#00f2fe" },
+    { label: "0.1 TON",   val: 0.1,   prob: 1,  color: "#12192a" },
+    { label: "0.5 TON",   val: 0.5,   prob: 0.5,color: "#00f2fe" },
+    { label: "0.01 TON",  val: 0.01,  prob: 5,  color: "#12192a" },
+    { label: "0.1 TON",   val: 0.1,   prob: 1,  color: "#00f2fe" },
     { label: "2.0 TON",   val: 2.0,   prob: 0.1,color: "#ef4444" }
 ];
 
-const totalSlices = slices.length;
-const sliceAngle = 360 / totalSlices;
+const sliceAngle = 360 / slices.length;
 
 function buildCleanWheel() {
     const board = document.getElementById('wheel-board');
     board.innerHTML = '';
-    let gradientStops = [];
-    slices.forEach((slice, i) => {
-        gradientStops.push(`${slice.color} ${i * sliceAngle}deg ${(i + 1) * sliceAngle}deg`);
-    });
+    let gradientStops = slices.map((s, i) => `${s.color} ${i * sliceAngle}deg ${(i + 1) * sliceAngle}deg`);
     board.style.background = `conic-gradient(${gradientStops.join(', ')})`;
 
     slices.forEach((slice, i) => {
@@ -191,61 +206,52 @@ function buildCleanWheel() {
     });
 }
 
-let isSpinning = false;
-let currentDeg = 0;
+let isSpinning = false, currentDeg = 0;
 
 function spinWheel() {
     if (isSpinning) return;
-
     const now = Date.now();
-    const cooldown = 24 * 60 * 60 * 1000;
-    
-    // Check spin eligibility
-    if (now - lastSpinTime < cooldown && bonusSpins <= 0) {
-        tg.showAlert("Cooldown Active! Please wait for 24 hours or refer friends to get bonus spins.");
-        return;
+    if (now - lastSpinTime < 24 * 60 * 60 * 1000 && bonusSpins <= 0) {
+        return showToast("Daily Spin Cooldown Active!", "error");
     }
 
     isSpinning = true;
-
-    // Deduct bonus spin if available, else update lastSpinTime
-    if (bonusSpins > 0) {
-        bonusSpins--;
-        localStorage.setItem('bonusSpins', bonusSpins);
-    } else {
-        lastSpinTime = now;
-        localStorage.setItem('lastSpinTime', lastSpinTime);
-    }
-
+    if (bonusSpins > 0) bonusSpins--; else lastSpinTime = now;
+    localStorage.setItem('bonusSpins', bonusSpins);
+    localStorage.setItem('lastSpinTime', lastSpinTime);
     updateUI();
-    tg.HapticFeedback.impactOccurred('medium');
 
-    // Rigged Outcome Selection (70% chance for 0.001 TON)
-    let rand = Math.random() * 100;
-    let sum = 0, winningIndex = 0;
+    // Wheel Spin Ticking Sound Interval
+    let soundInterval = setInterval(() => playSound('tick'), 150);
+
+    let rand = Math.random() * 100, sum = 0, winningIndex = 0;
     for (let i = 0; i < slices.length; i++) {
         sum += slices[i].prob;
         if (rand <= sum) { winningIndex = i; break; }
     }
 
     const spins = 5;
-    const targetSliceAngle = (winningIndex * sliceAngle) + (sliceAngle / 2);
-    const finalDegree = currentDeg + (360 * spins) + (360 - targetSliceAngle);
+    const targetAngle = (winningIndex * sliceAngle) + (sliceAngle / 2);
+    const finalDegree = currentDeg + (360 * spins) + (360 - targetAngle);
 
     document.getElementById('wheel-board').style.transform = `rotate(${finalDegree}deg)`;
     currentDeg = finalDegree;
 
     setTimeout(() => {
+        clearInterval(soundInterval);
+        playSound('win');
+        
+        // 🎆 Trigger Canvas Fireworks Confetti
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
         let wonVal = slices[winningIndex].val;
         balance += wonVal;
         localStorage.setItem('balance', balance);
         
         addHistory("Lucky Wheel", `Won ${wonVal} TON`, wonVal, 'win');
-        
         document.getElementById('win-amount-text').innerText = `${wonVal} TON`;
         document.getElementById('win-modal').style.display = 'flex';
         
-        tg.HapticFeedback.notificationOccurred('success');
         updateUI();
         isSpinning = false;
     }, 4000);
@@ -261,31 +267,23 @@ function addHistory(game, detail, amount, type) {
 
 function renderHistory() {
     const container = document.getElementById('history-container');
-    container.innerHTML = history.length === 0 ? "<p style='color:#64748b; text-align:center;'>No activity yet.</p>" : "";
+    container.innerHTML = history.length === 0 ? "<p style='color:#64748b; text-align:center;'>No activity logged.</p>" : "";
     history.forEach(item => {
-        let isWin = item.type === 'win';
         container.innerHTML += `
-            <div class="history-item">
-                <div><strong>${item.game}</strong><br><small style="color:#64748b">${item.detail} (${item.time})</small></div>
-                <div class="${isWin ? 'hist-win' : 'hist-loss'}">${isWin ? '+' : '-'}${item.amount} TON</div>
+            <div class="glass-card" style="padding: 12px; display:flex; justify-content:space-between; margin-bottom:8px;">
+                <div><strong>${item.game}</strong><br><small style="color:#64748b">${item.detail}</small></div>
+                <div style="color:${item.type==='win'?'#10b981':'#ef4444'}; font-weight:800;">${item.type==='win'?'+':'-'}${item.amount} TON</div>
             </div>
         `;
     });
 }
 
 function copyRefLink() {
-    let userId = user ? user.id : '000';
-    let link = `https://t.me/YourBotName?start=${userId}`;
-    
-    // Simulate Bonus Spin Addition on Referral Share
     bonusSpins++;
     localStorage.setItem('bonusSpins', bonusSpins);
     updateUI();
-
-    tg.showAlert(`Referral link generated:\n${link}\n\n1 Bonus spin added!`);
+    showToast("Referral Link Copied! 1 Bonus Spin Added.", "success");
 }
 
 buildCleanWheel();
 updateUI();
-// Auto update timer every 1 min
-setInterval(checkSpinCooldown, 60000);
