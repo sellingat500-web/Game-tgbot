@@ -3,182 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rarism Gaming - TON Casino</title>
+    <title>Rarism Gaming - Premium TON Casino</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Confetti Fireworks FX -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="new-top-bar">
-        <div class="logo-text">RARISM</div>
-        <div class="user-controls">
-            <div class="balance-pill" onclick="switchPage('wallet')">
-                <span id="user-balance">0.000</span>
+    <!-- Stake Style Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="glass-header">
+        <div class="logo-box">
+            <span class="logo-glow">RARISM</span>
+            <span class="pro-tag">VIP</span>
+        </div>
+        <div class="header-right">
+            <div class="sound-toggle-btn" onclick="toggleSound()" id="sound-btn">
+                <i class="fas fa-volume-up"></i>
+            </div>
+            <div class="balance-pill-pro" onclick="switchPage('wallet')">
                 <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" class="ton-icon" alt="TON">
+                <span id="user-balance">0.000</span>
+                <div class="plus-btn"><i class="fas fa-plus"></i></div>
             </div>
         </div>
     </header>
 
-    <!-- Live Ticker -->
-    <div class="live-ticker">
-        <div class="ticker-content" id="ticker-text">
-            🔥 <span>@alex_01</span> won <b>0.1 TON</b> on Aviator &nbsp;|&nbsp; 
-            🎰 <span>@rahul_tg</span> won <b>0.5 TON</b> on Lucky Wheel &nbsp;|&nbsp;
-            🐔 <span>@crypto_king</span> won <b>0.01 TON</b> on Chicken Road
+    <!-- VIP Level & XP Progress Header -->
+    <div class="vip-bar-container">
+        <div class="vip-info">
+            <span class="vip-badge" id="vip-level-name"><i class="fas fa-crown"></i> BRONZE I</span>
+            <span class="vip-xp-text" id="vip-xp-val">240 / 1000 XP</span>
+        </div>
+        <div class="xp-progress-track">
+            <div class="xp-progress-fill" id="xp-fill" style="width: 24%;"></div>
         </div>
     </div>
 
-    <!-- PAGE 1: GAMES -->
+    <!-- Live Live Feed Ticker -->
+    <div class="live-bets-bar">
+        <div class="bets-ticker" id="bets-ticker">
+            <div class="bet-item"><span class="user">@alex_01</span> <span class="game">Aviator</span> <span class="win">+0.42 TON</span></div>
+            <div class="bet-item"><span class="user">@crypto_99</span> <span class="game">Wheel</span> <span class="win">+1.00 TON</span></div>
+            <div class="bet-item"><span class="user">@sam_vip</span> <span class="game">Mines</span> <span class="win">+0.15 TON</span></div>
+        </div>
+    </div>
+
+    <!-- PAGE 1: GAMES (Stake Tile Aesthetic) -->
     <div id="page-games" class="page active">
         <section class="games-container">
             <div class="section-title">
-                <h2>🔥 Trending Games</h2>
-                <span class="live-badge">LIVE 2.4k Players</span>
+                <h3><i class="fas fa-fire highlight-icon"></i> Originals</h3>
+                <span class="online-pill"><span class="green-dot"></span> 3,412 Playing</span>
             </div>
             
             <div class="games-grid">
-                <div class="game-card" onclick="alert('Aviator coming soon!')">
-                    <div class="game-badge">HOT</div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/1356/1356479.png" class="game-img" alt="Aviator">
-                    <div class="game-title">Aviator</div>
-                    <span class="play-tag">PLAY NOW</span>
+                <div class="pro-game-card" onclick="showToast('Aviator engine launching soon!', 'info')">
+                    <div class="card-badge hot">HOT</div>
+                    <div class="card-media">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1356/1356479.png" alt="Aviator">
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">Aviator Pro</div>
+                        <div class="card-sub">Multipliers up to 1000x</div>
+                    </div>
                 </div>
 
-                <div class="game-card" onclick="alert('Chicken Road coming soon!')">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2632/2632833.png" class="game-img" alt="Chicken Road">
-                    <div class="game-title">Chicken Road</div>
-                    <span class="play-tag">PLAY NOW</span>
+                <div class="pro-game-card" onclick="switchPage('wheel')">
+                    <div class="card-badge bonus">FREE DAILY</div>
+                    <div class="card-media">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055663.png" alt="Wheel">
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">Lucky Wheel</div>
+                        <div class="card-sub">Win up to 2.0 TON</div>
+                    </div>
                 </div>
 
-                <div class="game-card" onclick="alert('777 Slot coming soon!')">
-                    <div class="game-badge">JACKPOT</div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/1055/1055663.png" class="game-img" alt="777 Slot">
-                    <div class="game-title">777 Slot</div>
-                    <span class="play-tag">PLAY NOW</span>
+                <div class="pro-game-card" onclick="showToast('Chicken Road launching soon!', 'info')">
+                    <div class="card-media">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2632/2632833.png" alt="Chicken Road">
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">Chicken Road</div>
+                        <div class="card-sub">Cross & Win</div>
+                    </div>
                 </div>
 
-                <div class="game-card" onclick="alert('Coin Flip coming soon!')">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1490/1490848.png" class="game-img" alt="Coin Flip">
-                    <div class="game-title">Coin Flip</div>
-                    <span class="play-tag">PLAY NOW</span>
-                </div>
-
-                <div class="game-card full-width" onclick="alert('Mines coming soon!')">
-                    <img src="https://cdn-icons-png.flaticon.com/512/811/811452.png" class="game-img" alt="Mines">
-                    <div class="game-title">Mines 3x3</div>
-                    <span class="play-tag">PLAY NOW</span>
+                <div class="pro-game-card" onclick="showToast('Mines 3x3 launching soon!', 'info')">
+                    <div class="card-badge jackpot">JACKPOT</div>
+                    <div class="card-media">
+                        <img src="https://cdn-icons-png.flaticon.com/512/811/811452.png" alt="Mines">
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">Mines 3x3</div>
+                        <div class="card-sub">High Volatility</div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- PAGE 2: PROFILE (Cleaned - No Deposit/Withdrawal Buttons) -->
+    <!-- PAGE 2: PROFILE & VIP CLUB -->
     <div id="page-profile" class="page" style="display: none;">
-        <div class="profile-card">
-            <img id="profile-dp" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Profile">
-            <h2 id="profile-name">Guest Player</h2>
-            <p class="user-id">ID: <span id="profile-id">000000</span></p>
+        <div class="glass-card profile-card">
+            <div class="avatar-glow-wrapper">
+                <img id="profile-dp" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Profile">
+            </div>
+            <h2 id="profile-name">VIP Gambler</h2>
+            <p class="user-id-badge">ID: <span id="profile-id">8300015</span></p>
         </div>
 
-        <div class="referral-box">
-            <div class="ref-icon"><i class="fas fa-gift"></i></div>
-            <h3>Refer & Earn Spins</h3>
-            <p>Get <b>1 Bonus Spin</b> for every referred friend!</p>
-            <button class="btn refer-btn" onclick="copyRefLink()"><i class="fas fa-copy"></i> Copy Referral Link</button>
+        <div class="glass-card vip-tier-card">
+            <div class="vip-header">
+                <i class="fas fa-gem gold-icon"></i>
+                <h3>Rarism VIP Club</h3>
+            </div>
+            <p>Level up by playing games & referring friends to unlock instant rakeback rewards!</p>
+            <button class="btn-glow refer-btn" onclick="copyRefLink()"><i class="fas fa-user-plus"></i> Invite & Earn Spins</button>
         </div>
     </div>
 
-    <!-- PAGE 3: WHEEL (24H Timer Protected) -->
+    <!-- PAGE 3: WHEEL (Neon Cyberpunk Design) -->
     <div id="page-wheel" class="page" style="display: none;">
         <div class="wheel-header">
-            <h2>💎 TON Lucky Wheel</h2>
-            <div class="spin-counter-badge" id="spin-status-badge">Daily Spin: Available</div>
+            <h2>💎 TON VIP Wheel</h2>
+            <div class="spin-counter-badge" id="spin-status-badge">Daily Spin: Ready</div>
         </div>
         
-        <div class="wheel-container">
-            <div class="wheel-pointer"></div>
+        <div class="wheel-stage">
+            <div class="wheel-outer-ring"></div>
+            <div class="wheel-pointer-pro"></div>
             <div class="wheel-center-cap">
                 <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" alt="TON">
             </div>
             <div class="wheel-board" id="wheel-board"></div>
         </div>
 
-        <button class="btn spin-btn" id="spin-button" onclick="spinWheel()">SPIN NOW</button>
+        <button class="btn-spin-glow" id="spin-button" onclick="spinWheel()">SPIN & WIN</button>
     </div>
 
-    <!-- PAGE 4: WALLET (Deposit & Withdrawal Section) -->
+    <!-- PAGE 4: WALLET & CASHIER -->
     <div id="page-wallet" class="page" style="display: none;">
-        <div class="wallet-card">
-            <p class="balance-label">Total Balance</p>
+        <div class="glass-card wallet-hero">
+            <span class="balance-label">MAIN BALANCE</span>
             <h1 class="balance-val"><span id="wallet-balance">0.000</span> <small>TON</small></h1>
         </div>
 
-        <div class="wallet-tabs">
-            <button class="tab-btn active" id="tab-dep-btn" onclick="switchWalletTab('deposit')">⬇ Deposit</button>
-            <button class="tab-btn" id="tab-with-btn" onclick="switchWalletTab('withdraw')">⬆ Withdraw</button>
+        <div class="wallet-tab-selector">
+            <button class="w-tab active" id="tab-dep-btn" onclick="switchWalletTab('deposit')"><i class="fas fa-qrcode"></i> Deposit</button>
+            <button class="w-tab" id="tab-with-btn" onclick="switchWalletTab('withdraw')"><i class="fas fa-paper-plane"></i> Withdraw</button>
         </div>
 
-        <!-- Deposit Box -->
-        <div id="deposit-box" class="wallet-box">
-            <h3>Deposit Funds via UPI</h3>
-            <input type="number" id="dep-amount" placeholder="Enter Amount (e.g. 100 ₹)">
-            <button class="btn deposit-btn" onclick="generateDepositQR()">Generate UPI QR</button>
+        <!-- Deposit -->
+        <div id="deposit-box" class="glass-card cashier-box">
+            <h3>Instant UPI Deposit</h3>
+            <div class="input-group">
+                <input type="number" id="dep-amount" placeholder="Enter INR Amount (Min ₹50)">
+            </div>
+            <button class="btn-glow deposit-btn" onclick="generateDepositQR()"><i class="fas fa-bolt"></i> Generate Pay QR</button>
             
             <div id="qr-section" style="display: none; margin-top: 15px;">
-                <p>Scan & Pay <strong id="qr-amount-text">₹0</strong></p>
-                <img id="upi-qr-img" src="" alt="UPI QR" style="width: 180px; height: 180px; margin: 10px 0; border-radius: 10px;">
-                <button class="btn claim-btn" onclick="confirmDepositSent()">Done (I Have Paid)</button>
+                <p class="pay-text">Pay <strong id="qr-amount-text">₹0</strong> via PhonePe / GPay / Paytm</p>
+                <div class="qr-wrapper">
+                    <img id="upi-qr-img" src="" alt="UPI QR">
+                </div>
+                <button class="btn-glow claim-btn" onclick="confirmDepositSent()"><i class="fas fa-check-circle"></i> Confirm Payment</button>
             </div>
         </div>
 
-        <!-- Withdraw Box -->
-        <div id="withdraw-box" class="wallet-box" style="display: none;">
-            <h3>Withdraw Funds to UPI</h3>
-            <p class="info-text">Note: Minimum <b>0.5 TON</b> balance must be maintained.</p>
-            <p class="max-text">Max Withdrawable: <strong id="max-withdraw-val">0.000 TON</strong></p>
+        <!-- Withdraw -->
+        <div id="withdraw-box" class="glass-card cashier-box" style="display: none;">
+            <h3>Express UPI Withdrawal</h3>
+            <div class="alert-info-box"><i class="fas fa-shield-alt"></i> Min <b>0.5 TON</b> reserve required.</div>
+            <p class="max-with-label">Max Withdrawable: <strong id="max-withdraw-val">0.000 TON</strong></p>
             
-            <input type="text" id="with-upi" placeholder="Enter UPI ID (e.g. name@upi)">
-            <input type="number" id="with-amount" placeholder="Amount (TON)" step="0.001">
-            <button class="btn withdraw-btn" onclick="processWithdrawal()">Proceed Withdrawal</button>
+            <div class="input-group"><input type="text" id="with-upi" placeholder="Enter UPI ID (e.g. user@upi)"></div>
+            <div class="input-group"><input type="number" id="with-amount" placeholder="TON Amount" step="0.001"></div>
+            <button class="btn-glow withdraw-btn" onclick="processWithdrawal()"><i class="fas fa-arrow-right"></i> Request Payout</button>
         </div>
     </div>
 
     <!-- PAGE 5: HISTORY -->
     <div id="page-history" class="page" style="display: none;">
-        <h2>Transaction History</h2>
+        <h2 class="page-title">Transaction & Spin Logs</h2>
         <div class="history-list" id="history-container"></div>
     </div>
 
-    <!-- WIN MODAL -->
+    <!-- WINNER CELEBRATION MODAL -->
     <div id="win-modal" class="modal-overlay" style="display: none;">
-        <div class="win-card">
-            <div class="sparkles">✨</div>
-            <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" class="win-icon" alt="TON">
-            <h2>CONGRATULATIONS!</h2>
-            <p>You won</p>
-            <h1 id="win-amount-text">0.001 TON</h1>
-            <button class="btn claim-btn" onclick="closeWinModal()">CLAIM REWARD</button>
+        <div class="win-card-pro">
+            <div class="win-glow-bg"></div>
+            <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" class="win-icon-bounce" alt="TON">
+            <h2 class="gold-text">BIG WIN!</h2>
+            <p>You Received</p>
+            <h1 id="win-amount-text" class="neon-number">0.001 TON</h1>
+            <button class="btn-glow claim-btn" onclick="closeWinModal()">COLLECT REWARD</button>
         </div>
     </div>
 
-    <!-- DOWNSIDE NAVIGATION BAR (5 Tabs) -->
-    <nav class="bottom-nav">
-        <div class="nav-item" onclick="switchPage('profile')" id="nav-profile">
-            <i class="fas fa-user"></i><span>Profile</span>
+    <!-- STAKE STYLE BOTTOM NAVIGATION -->
+    <nav class="pro-bottom-nav">
+        <div class="nav-tab" onclick="switchPage('profile')" id="nav-profile">
+            <i class="fas fa-user-shield"></i><span>VIP</span>
         </div>
-        <div class="nav-item" onclick="switchPage('wheel')" id="nav-wheel">
+        <div class="nav-tab" onclick="switchPage('wheel')" id="nav-wheel">
             <i class="fas fa-dharmachakra"></i><span>Wheel</span>
         </div>
-        <div class="nav-item nav-center active" onclick="switchPage('games')" id="nav-games">
-            <div class="center-btn"><i class="fas fa-gamepad"></i><span>Games</span></div>
+        <div class="nav-tab nav-main active" onclick="switchPage('games')" id="nav-games">
+            <div class="main-btn-glow"><i class="fas fa-gamepad"></i></div>
+            <span>Games</span>
         </div>
-        <div class="nav-item" onclick="switchPage('wallet')" id="nav-wallet">
-            <i class="fas fa-wallet"></i><span>Wallet</span>
+        <div class="nav-tab" onclick="switchPage('wallet')" id="nav-wallet">
+            <i class="fas fa-wallet"></i><span>Cashier</span>
         </div>
-        <div class="nav-item" onclick="switchPage('history')" id="nav-history">
-            <i class="fas fa-history"></i><span>History</span>
+        <div class="nav-tab" onclick="switchPage('history')" id="nav-history">
+            <i class="fas fa-receipt"></i><span>Logs</span>
         </div>
     </nav>
 
