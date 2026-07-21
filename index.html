@@ -3,71 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rarism Gaming</title>
+    <title>Rarism Gaming - TON Casino</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Header with Official TON Coin Image -->
     <header class="new-top-bar">
         <div class="logo-text">RARISM</div>
         <div class="user-controls">
             <div class="balance-pill" onclick="switchPage('profile')">
-                <span id="user-balance">0.00</span>
-                <div class="currency-icon">💎</div>
+                <span id="user-balance">0.000</span>
+                <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" class="ton-icon" alt="TON">
             </div>
         </div>
     </header>
 
-    <!-- PAGE 1: GAMES (Default) -->
+    <!-- Live Winners Ticker Bar (AI Feature) -->
+    <div class="live-ticker">
+        <div class="ticker-content" id="ticker-text">
+            🔥 <span>@alex_01</span> won <b>0.1 TON</b> on Aviator &nbsp;|&nbsp; 
+            🎰 <span>@rahul_tg</span> won <b>0.5 TON</b> on Lucky Wheel &nbsp;|&nbsp;
+            🐔 <span>@crypto_king</span> won <b>0.01 TON</b> on Chicken Road
+        </div>
+    </div>
+
+    <!-- PAGE 1: GAMES -->
     <div id="page-games" class="page active">
         <section class="games-container">
-            <h2>🔥 Trending Games</h2>
+            <div class="section-title">
+                <h2>🔥 Trending Games</h2>
+                <span class="live-badge">LIVE 2.4k Players</span>
+            </div>
+            
             <div class="games-grid">
-                <div class="game-card" onclick="alert('Aviator coming soon!')"><div class="game-icon">🚀</div><div class="game-title">Aviator</div></div>
-                <div class="game-card" onclick="alert('Coin Flip Coming soon!')"><div class="game-icon">🪙</div><div class="game-title">Coin Flip</div></div>
-                <div class="game-card" onclick="alert('777 Slot coming soon!')"><div class="game-icon">🎰</div><div class="game-title">777 Slot</div></div>
-                <div class="game-card" onclick="alert('Mines coming soon!')"><div class="game-icon">💣</div><div class="game-title">Mines 3x3</div></div>
+                
+                <div class="game-card" onclick="alert('Aviator coming soon!')">
+                    <div class="game-badge">HOT</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/1356/1356479.png" class="game-img" alt="Aviator">
+                    <div class="game-title">Aviator</div>
+                    <span class="play-tag">PLAY NOW</span>
+                </div>
+
+                <div class="game-card" onclick="alert('Chicken Road coming soon!')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2632/2632833.png" class="game-img" alt="Chicken Road">
+                    <div class="game-title">Chicken Road</div>
+                    <span class="play-tag">PLAY NOW</span>
+                </div>
+
+                <div class="game-card" onclick="alert('777 Slot coming soon!')">
+                    <div class="game-badge">JACKPOT</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/1055/1055663.png" class="game-img" alt="777 Slot">
+                    <div class="game-title">777 Slot</div>
+                    <span class="play-tag">PLAY NOW</span>
+                </div>
+
+                <div class="game-card" onclick="alert('Coin Flip coming soon!')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1490/1490848.png" class="game-img" alt="Coin Flip">
+                    <div class="game-title">Coin Flip</div>
+                    <span class="play-tag">PLAY NOW</span>
+                </div>
+
+                <div class="game-card full-width" onclick="alert('Mines coming soon!')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/811/811452.png" class="game-img" alt="Mines">
+                    <div class="game-title">Mines 3x3</div>
+                    <span class="play-tag">PLAY NOW</span>
+                </div>
+
             </div>
         </section>
     </div>
 
     <!-- PAGE 2: PROFILE -->
     <div id="page-profile" class="page" style="display: none;">
-        <div class="profile-header">
-            <img id="profile-dp" src="https://i.imgur.com/6M6H1hU.png" alt="Profile">
+        <div class="profile-card">
+            <img id="profile-dp" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Profile">
             <h2 id="profile-name">Guest Player</h2>
-            <p>ID: <span id="profile-id">000000</span></p>
+            <p class="user-id">ID: <span id="profile-id">000000</span></p>
         </div>
         
-        <div class="wallet-section">
-            <h3>Total Balance: <span id="profile-balance">0.00</span> 💎 Grams</h3>
+        <div class="wallet-card">
+            <p class="balance-label">Total Balance</p>
+            <h1 class="balance-val"><span id="profile-balance">0.000</span> <small>TON</small></h1>
             <div class="wallet-buttons">
-                <button class="btn deposit-btn" onclick="alert('Deposit form here')">⬇ Deposit</button>
-                <button class="btn withdraw-btn" onclick="alert('Withdraw form here')">⬆ Withdraw</button>
+                <button class="btn deposit-btn" onclick="alert('Deposit Window')"><i class="fas fa-arrow-down"></i> Deposit</button>
+                <button class="btn withdraw-btn" onclick="alert('Withdraw Window')"><i class="fas fa-arrow-up"></i> Withdraw</button>
             </div>
         </div>
 
         <div class="referral-box">
-            <h3>👥 Refer & Earn</h3>
-            <p>Get 1 FREE Spin for every referral!</p>
-            <button class="btn refer-btn" onclick="copyRefLink()">Copy Referral Link</button>
+            <div class="ref-icon"><i class="fas fa-gift"></i></div>
+            <h3>Refer & Earn Spins</h3>
+            <p>Get <b>1 FREE Spin</b> + <b>1% Commission</b> for every referred friend!</p>
+            <button class="btn refer-btn" onclick="copyRefLink()"><i class="fas fa-copy"></i> Copy Referral Link</button>
         </div>
     </div>
 
-    <!-- PAGE 3: WHEEL -->
+    <!-- PAGE 3: WHEEL (RESTRUCTURED NO-SKEW DESIGN) -->
     <div id="page-wheel" class="page" style="display: none;">
-        <h2>Lucky Wheel</h2>
-        <p>Free Spins Available: <strong id="spin-count">0</strong></p>
+        <div class="wheel-header">
+            <h2>💎 TON Lucky Wheel</h2>
+            <div class="spin-counter-badge">Spins Remaining: <strong id="spin-count">1</strong></div>
+        </div>
         
-        <div class="wheel-box">
-            <div class="pointer">▼</div>
-            <div class="wheel" id="wheel">
-                <!-- JavaScript se slices generate honge -->
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <div class="wheel-center-cap">
+                <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" alt="TON">
+            </div>
+            <div class="wheel-board" id="wheel-board">
+                <!-- Clean JS Rendered Slices -->
             </div>
         </div>
+
         <button class="btn spin-btn" id="spin-button" onclick="spinWheel()">SPIN NOW</button>
     </div>
 
@@ -75,11 +125,23 @@
     <div id="page-history" class="page" style="display: none;">
         <h2>Transaction History</h2>
         <div class="history-list" id="history-container">
-            <!-- JavaScript se transactions yahan aayenge -->
+            <!-- History Records -->
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (Based on 1000054566.png) -->
+    <!-- WIN WINNER MODAL CELEBRATION (AI Feature) -->
+    <div id="win-modal" class="modal-overlay" style="display: none;">
+        <div class="win-card">
+            <div class="sparkles">✨</div>
+            <img src="https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png" class="win-icon" alt="TON">
+            <h2>CONGRATULATIONS!</h2>
+            <p>You won</p>
+            <h1 id="win-amount-text">0.001 TON</h1>
+            <button class="btn claim-btn" onclick="closeWinModal()">CLAIM REWARD</button>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
     <nav class="bottom-nav">
         <div class="nav-item" onclick="switchPage('profile')" id="nav-profile">
             <i class="fas fa-user"></i><span>Profile</span>
@@ -91,7 +153,7 @@
             <i class="fas fa-dharmachakra"></i><span>Wheel</span>
         </div>
         <div class="nav-item" onclick="switchPage('history')" id="nav-history">
-            <i class="fas fa-file-invoice-dollar"></i><span>History</span>
+            <i class="fas fa-history"></i><span>History</span>
         </div>
     </nav>
 
