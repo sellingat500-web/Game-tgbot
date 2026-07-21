@@ -10,58 +10,90 @@
 </head>
 <body>
 
-    <!-- Naya Top Header -->
+    <!-- Header -->
     <header class="new-top-bar">
         <div class="logo-text">RARISM</div>
         <div class="user-controls">
-            <div class="balance-pill" onclick="openWallet()">
+            <div class="balance-pill" onclick="switchPage('profile')">
                 <span id="user-balance">0.00</span>
-                <div class="currency-icon">₹</div>
+                <div class="currency-icon">💎</div>
             </div>
-            <img id="user-photo" src="https://i.imgur.com/6M6H1hU.png" alt="Profile">
         </div>
     </header>
 
-    <!-- Games Section (Same as before, with basic layout) -->
-    <div id="main-dashboard" style="padding-top: 20px;">
+    <!-- PAGE 1: GAMES (Default) -->
+    <div id="page-games" class="page active">
         <section class="games-container">
             <h2>🔥 Trending Games</h2>
             <div class="games-grid">
                 <div class="game-card" onclick="alert('Aviator coming soon!')"><div class="game-icon">🚀</div><div class="game-title">Aviator</div></div>
-                <div class="game-card" onclick="alert('Chicken Road coming soon!')"><div class="game-icon">🐔</div><div class="game-title">Chicken Road</div></div>
+                <div class="game-card" onclick="alert('Coin Flip Coming soon!')"><div class="game-icon">🪙</div><div class="game-title">Coin Flip</div></div>
                 <div class="game-card" onclick="alert('777 Slot coming soon!')"><div class="game-icon">🎰</div><div class="game-title">777 Slot</div></div>
                 <div class="game-card" onclick="alert('Mines coming soon!')"><div class="game-icon">💣</div><div class="game-title">Mines 3x3</div></div>
             </div>
         </section>
     </div>
 
-    <!-- WALLET MODALS (Hidden by default) -->
-    <div id="overlay" class="overlay" style="display:none;"></div>
+    <!-- PAGE 2: PROFILE -->
+    <div id="page-profile" class="page" style="display: none;">
+        <div class="profile-header">
+            <img id="profile-dp" src="https://i.imgur.com/6M6H1hU.png" alt="Profile">
+            <h2 id="profile-name">Guest Player</h2>
+            <p>ID: <span id="profile-id">000000</span></p>
+        </div>
+        
+        <div class="wallet-section">
+            <h3>Total Balance: <span id="profile-balance">0.00</span> 💎 Grams</h3>
+            <div class="wallet-buttons">
+                <button class="btn deposit-btn" onclick="alert('Deposit form here')">⬇ Deposit</button>
+                <button class="btn withdraw-btn" onclick="alert('Withdraw form here')">⬆ Withdraw</button>
+            </div>
+        </div>
 
-    <!-- 1. Wallet Action Modal -->
-    <div id="wallet-modal" class="modal" style="display:none;">
-        <h2>Wallet</h2>
-        <button class="action-btn deposit-btn" onclick="openDepositAmount()">⬇ Deposit</button>
-        <button class="action-btn withdraw-btn" onclick="alert('Withdrawal feature coming soon!')">⬆ Withdrawal</button>
-        <button class="close-btn" onclick="closeModals()">Close</button>
+        <div class="referral-box">
+            <h3>👥 Refer & Earn</h3>
+            <p>Get 1 FREE Spin for every referral!</p>
+            <button class="btn refer-btn" onclick="copyRefLink()">Copy Referral Link</button>
+        </div>
     </div>
 
-    <!-- 2. Deposit Amount Modal -->
-    <div id="amount-modal" class="modal" style="display:none;">
-        <h2>Enter Amount</h2>
-        <input type="number" id="deposit-amount" placeholder="₹ Amount (Min 100)" min="100">
-        <button class="action-btn deposit-btn" onclick="generateQR()">Next</button>
-        <button class="close-btn" onclick="closeModals()">Cancel</button>
+    <!-- PAGE 3: WHEEL -->
+    <div id="page-wheel" class="page" style="display: none;">
+        <h2>Lucky Wheel</h2>
+        <p>Free Spins Available: <strong id="spin-count">0</strong></p>
+        
+        <div class="wheel-box">
+            <div class="pointer">▼</div>
+            <div class="wheel" id="wheel">
+                <!-- JavaScript se slices generate honge -->
+            </div>
+        </div>
+        <button class="btn spin-btn" id="spin-button" onclick="spinWheel()">SPIN NOW</button>
     </div>
 
-    <!-- 3. QR Code Modal -->
-    <div id="qr-modal" class="modal" style="display:none;">
-        <h2>Pay via UPI</h2>
-        <p>Scan QR to pay <strong id="show-amount">₹0</strong></p>
-        <img id="qr-code-img" src="" alt="UPI QR Code" style="margin: 15px 0; border-radius: 10px;">
-        <button class="action-btn deposit-btn" onclick="sendAdminRequest()">Done (Payment Sent)</button>
-        <button class="close-btn" onclick="closeModals()">Cancel</button>
+    <!-- PAGE 4: HISTORY -->
+    <div id="page-history" class="page" style="display: none;">
+        <h2>Transaction History</h2>
+        <div class="history-list" id="history-container">
+            <!-- JavaScript se transactions yahan aayenge -->
+        </div>
     </div>
+
+    <!-- BOTTOM NAVIGATION (Based on 1000054566.png) -->
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="switchPage('profile')" id="nav-profile">
+            <i class="fas fa-user"></i><span>Profile</span>
+        </div>
+        <div class="nav-item nav-center active" onclick="switchPage('games')" id="nav-games">
+            <div class="center-btn"><i class="fas fa-gamepad"></i><span>Games</span></div>
+        </div>
+        <div class="nav-item" onclick="switchPage('wheel')" id="nav-wheel">
+            <i class="fas fa-dharmachakra"></i><span>Wheel</span>
+        </div>
+        <div class="nav-item" onclick="switchPage('history')" id="nav-history">
+            <i class="fas fa-file-invoice-dollar"></i><span>History</span>
+        </div>
+    </nav>
 
     <script src="script.js"></script>
 </body>
