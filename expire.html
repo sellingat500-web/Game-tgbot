@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Update</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000;
+            color: #00FF00;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #00FF00;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 255, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #444;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            padding: 15px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>YOUR SUBSCRIPTION IS EXPIRED</h1>
+    </header>
+    <div class="container">
+        <p>HELLO MY DEAR WEB USER 🥰🥰</p>
+        <p>AAPKA WEB EXPIRE HO GYA AGAR ACCHA LAGA HO TO BUY NOW PER CLICK KRO AUR WEB KO RENEW KRA LO</p>
+        <button onclick="redirectToPayment()">Buy Now</button>
+        <button onclick="contactSupport()">Contact Support</button>
+    </div>
+    <script>
+        function redirectToPayment() {
+            window.location.href = "https://t.me/Sanki_trusted09";
+        }
+
+        function contactSupport() {
+            alert("Please contact our support at support   @Sanki_trusted09");
+        }
+    </script>
+</body>
+</html>
