@@ -18,65 +18,65 @@ body { background-color: #0d111d; color: #ffffff; padding-bottom: 80px; overflow
 .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .live-badge { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; border: 1px solid #ef4444; }
 
-/* Games Layout */
+/* Games Grid */
 .games-container { padding: 15px 20px; }
 .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.game-card { background: #151d30; border: 1px solid #1e2942; border-radius: 14px; padding: 15px; text-align: center; position: relative; overflow: hidden; transition: 0.2s; }
-.game-card:active { transform: scale(0.96); }
+.game-card { background: #151d30; border: 1px solid #1e2942; border-radius: 14px; padding: 15px; text-align: center; position: relative; overflow: hidden; }
 .game-card.full-width { grid-column: span 2; display: flex; align-items: center; justify-content: space-around; }
-.game-card.full-width .game-img { margin-bottom: 0; }
 .game-img { width: 55px; height: 55px; margin-bottom: 8px; object-fit: contain; }
 .game-title { font-weight: bold; font-size: 14px; color: #f1f5f9; margin-bottom: 6px; }
-.play-tag { font-size: 10px; background: #0088cc; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; display: inline-block; }
+.play-tag { font-size: 10px; background: #0088cc; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
 .game-badge { position: absolute; top: 0; right: 0; background: #f59e0b; color: black; font-size: 9px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 8px; }
 
-/* Profile & Wallet Cards */
+/* Profile Card */
 .profile-card { text-align: center; padding: 20px; background: #151d30; margin: 15px 20px; border-radius: 16px; border: 1px solid #1e2942; }
 #profile-dp { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #0088cc; margin-bottom: 8px; }
-.wallet-card { background: linear-gradient(135deg, #1e2942, #111827); margin: 0 20px 15px; padding: 20px; border-radius: 16px; border: 1px solid #0088cc; text-align: center; }
-.balance-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; }
-.balance-val { font-size: 32px; color: #ffffff; margin: 5px 0 15px; }
-.balance-val small { font-size: 16px; color: #0088cc; }
-.wallet-buttons { display: flex; gap: 10px; }
-.btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; }
-.deposit-btn { background: #10b981; } .withdraw-btn { background: #ef4444; }
 .referral-box { background: #151d30; margin: 0 20px; padding: 20px; border-radius: 16px; border: 1px solid #1e2942; text-align: center; }
 .ref-icon { font-size: 30px; color: #f59e0b; margin-bottom: 5px; }
-.refer-btn { background: #0088cc; width: 100%; margin-top: 12px; }
 
-/* PERFECT CLEAN WHEEL CSS (FIXED SKEW ISSUE) */
+/* Wallet Section Styles */
+#page-wallet { padding: 20px; }
+.wallet-card { background: linear-gradient(135deg, #1e2942, #111827); padding: 20px; border-radius: 16px; border: 1px solid #0088cc; text-align: center; margin-bottom: 20px; }
+.balance-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; }
+.balance-val { font-size: 32px; color: #ffffff; margin-top: 5px; }
+.balance-val small { font-size: 16px; color: #0088cc; }
+
+.wallet-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+.tab-btn { flex: 1; padding: 12px; background: #151d30; border: 1px solid #1e2942; color: #94a3b8; border-radius: 10px; font-weight: bold; cursor: pointer; }
+.tab-btn.active { background: #0088cc; color: white; border-color: #0088cc; }
+
+.wallet-box { background: #151d30; padding: 20px; border-radius: 16px; border: 1px solid #1e2942; text-align: center; }
+.wallet-box input { width: 100%; padding: 12px; margin: 12px 0; border-radius: 8px; border: 1px solid #1e2942; background: #0d111d; color: white; font-size: 15px; outline: none; text-align: center; }
+.info-text { font-size: 12px; color: #f59e0b; margin-top: 5px; }
+.max-text { font-size: 13px; color: #10b981; margin: 8px 0; }
+
+.btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; }
+.deposit-btn { background: #10b981; } .withdraw-btn { background: #ef4444; } .refer-btn { background: #0088cc; } .claim-btn { background: #10b981; }
+
+/* WHEEL CSS */
 #page-wheel { text-align: center; padding: 15px; }
-.wheel-header h2 { font-size: 20px; margin-bottom: 5px; }
-.spin-counter-badge { display: inline-block; background: #1e2942; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: #f59e0b; border: 1px solid #f59e0b; margin-bottom: 20px; }
-
+.spin-counter-badge { display: inline-block; background: #1e2942; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #f59e0b; border: 1px solid #f59e0b; margin-bottom: 20px; }
 .wheel-container { position: relative; width: 310px; height: 310px; margin: 0 auto 25px; border-radius: 50%; border: 6px solid #1e2942; box-shadow: 0 0 25px rgba(0, 136, 204, 0.3); }
-.wheel-pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #ef4444; z-index: 20; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+.wheel-pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #ef4444; z-index: 20; }
 .wheel-center-cap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: #131929; border-radius: 50%; border: 3px solid #0088cc; z-index: 10; display: flex; align-items: center; justify-content: center; }
 .wheel-center-cap img { width: 26px; height: 26px; }
-
 .wheel-board { width: 100%; height: 100%; border-radius: 50%; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1); }
-
-/* Slice Label Styling (Zero Distortion) */
 .wheel-slice-text { position: absolute; top: 50%; left: 50%; width: 100px; height: 30px; margin-top: -15px; margin-left: -50px; transform-origin: center center; text-align: center; font-weight: 800; font-size: 13px; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; }
-
-.spin-btn { background: linear-gradient(135deg, #f59e0b, #d97706); width: 85%; padding: 15px; font-size: 18px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+.spin-btn { background: linear-gradient(135deg, #f59e0b, #d97706); width: 85%; padding: 15px; font-size: 18px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
 
 /* History List */
 #page-history { padding: 20px; }
 .history-item { display: flex; justify-content: space-between; background: #151d30; padding: 14px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #1e2942; }
-.hist-win { color: #10b981; font-weight: bold; }
+.hist-win { color: #10b981; font-weight: bold; } .hist-loss { color: #ef4444; font-weight: bold; }
 
-/* WIN MODAL STYLES */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.3s; }
-.win-card { background: #151d30; border: 2px solid #f59e0b; border-radius: 20px; padding: 30px 20px; text-align: center; width: 80%; max-width: 320px; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
+/* Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.win-card { background: #151d30; border: 2px solid #f59e0b; border-radius: 20px; padding: 30px 20px; text-align: center; width: 80%; max-width: 320px; }
 .win-icon { width: 60px; height: 60px; margin-bottom: 10px; }
-.win-card h2 { color: #f59e0b; font-size: 18px; margin-bottom: 5px; }
-.win-card h1 { font-size: 28px; color: #ffffff; margin: 10px 0 20px; }
-.claim-btn { background: #10b981; width: 100%; }
 
-/* Bottom Nav */
+/* Bottom Navigation (5 Nav Items) */
 .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: #080c16; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1e2942; z-index: 100; }
-.nav-item { display: flex; flex-direction: column; align-items: center; color: #64748b; font-size: 11px; cursor: pointer; width: 25%; }
+.nav-item { display: flex; flex-direction: column; align-items: center; color: #64748b; font-size: 10px; cursor: pointer; width: 20%; }
 .nav-item i { font-size: 18px; margin-bottom: 3px; }
 .nav-item.active { color: #0088cc; }
-.nav-center .center-btn { background: #0088cc; color: white; padding: 10px 20px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; transform: translateY(-8px); box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4); }
+.nav-center .center-btn { background: #0088cc; color: white; padding: 10px 18px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; transform: translateY(-8px); box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4); }
