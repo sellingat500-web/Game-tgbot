@@ -3,67 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Gaming Bot</title>
+    <title>Rarism Gaming</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- Icons ke liye -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Top Header: Profile & Balance -->
-    <header class="top-bar">
-        <div class="profile-section">
-            <img id="user-photo" src="https://via.placeholder.com/50" alt="Profile">
-            <div class="user-info">
-                <h3 id="user-name">Loading...</h3>
-                <p class="balance">💰 <span id="user-balance">0</span> Coins</p>
+    <!-- Naya Top Header -->
+    <header class="new-top-bar">
+        <div class="logo-text">RARISM</div>
+        <div class="user-controls">
+            <div class="balance-pill" onclick="openWallet()">
+                <span id="user-balance">0.00</span>
+                <div class="currency-icon">₹</div>
             </div>
+            <img id="user-photo" src="https://i.imgur.com/6M6H1hU.png" alt="Profile">
         </div>
     </header>
 
-    <!-- Rewards Section (Daily Bonus & Refer) -->
-    <section class="rewards-box">
-        <button id="daily-btn" class="btn reward-btn" onclick="claimDailyBonus()">
-            <i class="fas fa-gift"></i> Daily Bonus
-        </button>
-        <button class="btn refer-btn" onclick="openReferral()">
-            <i class="fas fa-users"></i> Refer & Earn (1%)
-        </button>
-    </section>
-
-    <!-- Games List -->
-    <section class="games-container">
-        <h2>🔥 Trending Games</h2>
-        <div class="games-grid">
-            
-            <div class="game-card" onclick="playGame('Aviator', 10)">
-                <div class="game-icon">🚀</div>
-                <div class="game-title">Aviator</div>
+    <!-- Games Section (Same as before, with basic layout) -->
+    <div id="main-dashboard" style="padding-top: 20px;">
+        <section class="games-container">
+            <h2>🔥 Trending Games</h2>
+            <div class="games-grid">
+                <div class="game-card" onclick="alert('Aviator coming soon!')"><div class="game-icon">🚀</div><div class="game-title">Aviator</div></div>
+                <div class="game-card" onclick="alert('Chicken Road coming soon!')"><div class="game-icon">🐔</div><div class="game-title">Chicken Road</div></div>
+                <div class="game-card" onclick="alert('777 Slot coming soon!')"><div class="game-icon">🎰</div><div class="game-title">777 Slot</div></div>
+                <div class="game-card" onclick="alert('Mines coming soon!')"><div class="game-icon">💣</div><div class="game-title">Mines 3x3</div></div>
             </div>
+        </section>
+    </div>
 
-            <div class="game-card" onclick="playGame('Chicken Road', 10)">
-                <div class="game-icon">🐔</div>
-                <div class="game-title">Chicken Road</div>
-            </div>
+    <!-- WALLET MODALS (Hidden by default) -->
+    <div id="overlay" class="overlay" style="display:none;"></div>
 
-            <div class="game-card" onclick="playGame('777 Slot', 10)">
-                <div class="game-icon">🎰</div>
-                <div class="game-title">777 Slot</div>
-            </div>
+    <!-- 1. Wallet Action Modal -->
+    <div id="wallet-modal" class="modal" style="display:none;">
+        <h2>Wallet</h2>
+        <button class="action-btn deposit-btn" onclick="openDepositAmount()">⬇ Deposit</button>
+        <button class="action-btn withdraw-btn" onclick="alert('Withdrawal feature coming soon!')">⬆ Withdrawal</button>
+        <button class="close-btn" onclick="closeModals()">Close</button>
+    </div>
 
-            <div class="game-card" onclick="playGame('Flip', 10)">
-                <div class="game-icon">🪙</div>
-                <div class="game-title">Coin Flip</div>
-            </div>
+    <!-- 2. Deposit Amount Modal -->
+    <div id="amount-modal" class="modal" style="display:none;">
+        <h2>Enter Amount</h2>
+        <input type="number" id="deposit-amount" placeholder="₹ Amount (Min 100)" min="100">
+        <button class="action-btn deposit-btn" onclick="generateQR()">Next</button>
+        <button class="close-btn" onclick="closeModals()">Cancel</button>
+    </div>
 
-            <div class="game-card" onclick="playGame('Mines', 10)">
-                <div class="game-icon">💣</div>
-                <div class="game-title">Mines 3x3</div>
-            </div>
-
-        </div>
-    </section>
+    <!-- 3. QR Code Modal -->
+    <div id="qr-modal" class="modal" style="display:none;">
+        <h2>Pay via UPI</h2>
+        <p>Scan QR to pay <strong id="show-amount">₹0</strong></p>
+        <img id="qr-code-img" src="" alt="UPI QR Code" style="margin: 15px 0; border-radius: 10px;">
+        <button class="action-btn deposit-btn" onclick="sendAdminRequest()">Done (Payment Sent)</button>
+        <button class="close-btn" onclick="closeModals()">Cancel</button>
+    </div>
 
     <script src="script.js"></script>
 </body>
